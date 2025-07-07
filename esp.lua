@@ -95,10 +95,12 @@ do --// functions
     
         function esp.get_tool(v)
             if v.Parent == game.Players then
-                if game.ReplicatedStorage.Players:FindFirstChild(tostring(v)) then
-                    if game.ReplicatedStorage.Players[tostring(v)].Status:FindFirstChild("GameplayVariables") and game.ReplicatedStorage.Players[tostring(v)].Status.GameplayVariables:FindFirstChild("EquippedTool") and tostring(game.ReplicatedStorage.Players[tostring(v)].Status.GameplayVariables.EquippedTool.Value) ~= "nil" then
-                        return tostring(game.ReplicatedStorage.Players[tostring(v)].Status.GameplayVariables.EquippedTool.Value) 
-                   end
+                local characer = esp.get_character(v)
+                if character then
+                    local tool = character:FindFirstChildOfClass("Tool")
+                    if tool then
+                        return tostring(tool)
+                    end
                 end
             end
             return "Hands"  
