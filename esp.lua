@@ -326,7 +326,7 @@ do --// object creation
     
     esp:connection(game.Players.PlayerRemoving, function(player)
         for i,v in pairs(esp.players[player]) do
-            DestoryRenderObject(v)
+            DestroyRenderObject(v)
         end
         esp.players[player] = nil
     end)
