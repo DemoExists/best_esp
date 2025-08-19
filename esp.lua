@@ -27,7 +27,7 @@ local esp = {
     drawings = {},
     connections = {},
     
-    enabled = false,
+    enabled = true,
     ai = false,
     team_check = false,
     use_display_names = false,
@@ -41,12 +41,12 @@ local esp = {
     },
 
     settings = {
-        name = {enabled = false, color = Color3.fromRGB(255, 255, 255)},
-        box = {enabled = false, color = Color3.fromRGB(255, 255, 255)},
-        health_bar = {enabled = false},
+        name = {enabled = true, color = Color3.fromRGB(255, 255, 255)},
+        box = {enabled = true, color = Color3.fromRGB(255, 255, 255)},
+        health_bar = {enabled = true, side = "top"},
         health_text = {enabled = false, color = Color3.fromRGB(255, 255, 255)},
-        distance = {enabled = false, color = Color3.fromRGB(255, 255, 255)},
-        weapon = {enabled = false, color = Color3.fromRGB(255, 255, 255)}
+        distance = {enabled = true, color = Color3.fromRGB(255, 255, 255)},
+        weapon = {enabled = true, color = Color3.fromRGB(255, 255, 255)}
     }
 }
 
@@ -175,6 +175,7 @@ do --// functions
                         local BoxPos, BoxSize = esp:calculate_bounding_box(character)
                         if BoxPos and BoxSize then
                             local BottomOffset = 0
+                            local TopOffset = 0
                             do --// Box
                                 if esp.settings.box.enabled then
                                     SetRenderProperty(espObjects.box, "Position", BoxPos)
@@ -198,10 +199,52 @@ do --// functions
                                 end
                             end
     
+                            do --// Health
+                                if esp.settings.health_bar.enabled then
+                                    if esp.settings.health_bar.side == "left" then
+                                        SetRenderProperty(espObjects.health, "From", Vector2.new((BoxPos.X - GetRenderProperty(espObjects.health_outline, "Thickness") - 1), BoxPos.Y + BoxSize.Y))
+                                        SetRenderProperty(espObjects.health, "To", Vector2.new(GetRenderProperty(espObjects.health, "From").X, GetRenderProperty(espObjects.health, "From").Y - (health / max_health) * BoxSize.Y))
+                                        SetRenderProperty(espObjects.health_outline, "From", GetRenderProperty(espObjects.health, "From") + Vector2.new(0, 1))
+                                        SetRenderProperty(espObjects.health_outline, "To", Vector2.new(GetRenderProperty(espObjects.health_outline, "From").X, BoxPos.Y - 1))
+                                    end
+
+                                    if esp.settings.health_bar.side == "right" then
+                                        SetRenderProperty(espObjects.health, "From", Vector2.new((BoxPos.X + BoxSize.X + GetRenderProperty(espObjects.health_outline, "Thickness") + 1), BoxPos.Y + BoxSize.Y))
+                                        SetRenderProperty(espObjects.health, "To", Vector2.new(GetRenderProperty(espObjects.health, "From").X, GetRenderProperty(espObjects.health, "From").Y - (health / max_health) * BoxSize.Y))
+                                        SetRenderProperty(espObjects.health_outline, "From", GetRenderProperty(espObjects.health, "From") + Vector2.new(0, 1))
+                                        SetRenderProperty(espObjects.health_outline, "To", Vector2.new(GetRenderProperty(espObjects.health_outline, "From").X, BoxPos.Y - 1))
+                                    end
+
+                                    if esp.settings.health_bar.side == "bottom" then
+                                        SetRenderProperty(espObjects.health, "From", Vector2.new(BoxPos.X, (BoxPos.Y + BoxSize.Y + GetRenderProperty(espObjects.health_outline, "Thickness") + 1)))
+                                        SetRenderProperty(espObjects.health, "To", Vector2.new((GetRenderProperty(espObjects.health, "From").X + (health / max_health) * BoxSize.X), GetRenderProperty(espObjects.health, "From").Y))
+                                        SetRenderProperty(espObjects.health_outline, "From", GetRenderProperty(espObjects.health, "From") + Vector2.new(-1, 0))
+                                        SetRenderProperty(espObjects.health_outline, "To", Vector2.new(BoxPos.X + BoxSize.X + 1, GetRenderProperty(espObjects.health_outline, "From").Y))
+                                        BottomOffset = BottomOffset + 5
+                                    end
+
+                                    if esp.settings.health_bar.side == "top" then
+                                        SetRenderProperty(espObjects.health, "From", Vector2.new(BoxPos.X, (BoxPos.Y - GetRenderProperty(espObjects.health_outline, "Thickness") - 1)))
+                                        SetRenderProperty(espObjects.health, "To", Vector2.new((GetRenderProperty(espObjects.health, "From").X + (health / max_health) * BoxSize.X), GetRenderProperty(espObjects.health, "From").Y))
+                                        SetRenderProperty(espObjects.health_outline, "From", GetRenderProperty(espObjects.health, "From") + Vector2.new(-1, 0))
+                                        SetRenderProperty(espObjects.health_outline, "To", Vector2.new(BoxPos.X + BoxSize.X + 1, GetRenderProperty(espObjects.health_outline, "From").Y))
+                                        TopOffset = TopOffset + 5
+                                    end
+
+                                    SetRenderProperty(espObjects.health, "Color", Color3.fromRGB(255, 0, 0):Lerp(Color3.fromRGB(0,255,0), health / max_health))
+    
+                                    SetRenderProperty(espObjects.health, "Visible", true)
+                                    SetRenderProperty(espObjects.health_outline, "Visible", true)
+                                else
+                                    SetRenderProperty(espObjects.health, "Visible", false)
+                                    SetRenderProperty(espObjects.health_outline, "Visible", false)
+                                end
+                            end
+
                             do --// Name
                                 if esp.settings.name.enabled then
                                     SetRenderProperty(espObjects.name, "Text", plr.Parent == game.Players and esp.use_display_names and plr.DisplayName or plr.Name)
-                                    SetRenderProperty(espObjects.name, "Position", BoxPos + Vector2.new(BoxSize.X/2, -GetRenderProperty(espObjects.name, "TextBounds").Y - 2))
+                                    SetRenderProperty(espObjects.name, "Position", BoxPos + Vector2.new(BoxSize.X/2, -GetRenderProperty(espObjects.name, "TextBounds").Y - 2 - TopOffset))
                                     SetRenderProperty(espObjects.name, "Color", esp.settings.name.color)
 
                                     if esp.highlights.target.enabled then
@@ -213,23 +256,6 @@ do --// functions
                                     SetRenderProperty(espObjects.name, "Visible", true)
                                 else
                                     SetRenderProperty(espObjects.name, "Visible", false)
-                                end
-                            end
-    
-                            do --// Health
-                                if esp.settings.health_bar.enabled then
-                                    SetRenderProperty(espObjects.health, "From", Vector2.new((BoxPos.X - GetRenderProperty(espObjects.health_outline, "Thickness") - 1), BoxPos.Y + BoxSize.Y))
-                                    SetRenderProperty(espObjects.health, "To", Vector2.new(GetRenderProperty(espObjects.health, "From").X, GetRenderProperty(espObjects.health, "From").Y - (health / max_health) * BoxSize.Y))
-                                    SetRenderProperty(espObjects.health, "Color", Color3.fromRGB(255, 0, 0):Lerp(Color3.fromRGB(0,255,0), health / max_health))
-    
-                                    SetRenderProperty(espObjects.health_outline, "From", GetRenderProperty(espObjects.health, "From") + Vector2.new(0, 1))
-                                    SetRenderProperty(espObjects.health_outline, "To", Vector2.new(GetRenderProperty(espObjects.health_outline, "From").X, BoxPos.Y - 1))
-    
-                                    SetRenderProperty(espObjects.health, "Visible", true)
-                                    SetRenderProperty(espObjects.health_outline, "Visible", true)
-                                else
-                                    SetRenderProperty(espObjects.health, "Visible", false)
-                                    SetRenderProperty(espObjects.health_outline, "Visible", false)
                                 end
                             end
     
@@ -263,7 +289,7 @@ do --// functions
                                         end
                                     end
 
-                                    BottomOffset = BottomOffset + (esp.settings.distance.enabled and 13) or 0
+                                    BottomOffset = BottomOffset + 13 --// BottomOffset + (esp.settings.distance.enabled and 13) or 0
     
                                     SetRenderProperty(espObjects.distance, "Visible", true)
                                 else
