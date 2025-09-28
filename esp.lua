@@ -262,8 +262,13 @@ do --// functions
                             do --// Health Text
                                 if esp.settings.health_text.enabled then
                                     SetRenderProperty(espObjects.health_text, "Text", tostring(math.floor(health)))
-                                    SetRenderProperty(espObjects.health_text, "Position", Vector2.new((BoxPos.X - GetRenderProperty(espObjects.health_outline, "Thickness") - 1), BoxPos.Y + BoxSize.Y - (health / max_health) * BoxSize.Y) + Vector2.new(-GetRenderProperty(espObjects.name, "TextBounds").Y, 0))
                                     SetRenderProperty(espObjects.health_text, "Color", esp.settings.health_text.color)
+
+                                    if esp.settings.health_bar.enabled and esp.settings.health_bar.side == "left" then
+                                        SetRenderProperty(espObjects.health_text, "Position", Vector2.new((BoxPos.X - GetRenderProperty(espObjects.health_outline, "Thickness") - 1), BoxPos.Y + BoxSize.Y - (health / max_health) * BoxSize.Y) + Vector2.new(-GetRenderProperty(espObjects.name, "TextBounds").Y, 0))
+                                    else
+                                        SetRenderProperty(espObjects.health_text, "Position", Vector2.new((BoxPos.X - 1), BoxPos.Y + BoxSize.Y - (health / max_health) * BoxSize.Y) + Vector2.new(-GetRenderProperty(espObjects.name, "TextBounds").Y, 0))
+                                    end
 
                                     if esp.highlights.target.enabled then
                                         if plr == esp.highlights.target.current then
@@ -358,7 +363,7 @@ do --// object creation
     end)
 end
 
-esp:connection(game.RunService.RenderStepped, function()
+esp:connection(game:GetService("RunService").RenderStepped, function()
     esp:update()
 end)
 
