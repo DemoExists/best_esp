@@ -53,7 +53,7 @@ local esp = {
 do --// functions
     do --// overrideable
         function esp.get_character(v)
-            if v.Parent == game.Players then
+            if v.Parent == game:GetService("Players") then
                 local character = v.Character
                 if character then
                     local head = character:FindFirstChild("Head")
@@ -94,7 +94,7 @@ do --// functions
         end
     
         function esp.get_tool(v)
-            if v.Parent == game.Players then
+            if v.Parent == game:GetService("Players") then
                 local characer = esp.get_character(v)
                 if character then
                     local tool = character:FindFirstChildOfClass("Tool")
@@ -107,7 +107,7 @@ do --// functions
         end
     
         function esp.check_team(v)
-            if game.Players.LocalPlayer.Team == v.Team then
+            if game:GetService("Players").LocalPlayer.Team == v.Team then
                 return false
             end
             return true
@@ -163,12 +163,12 @@ do --// functions
 
     function esp:update()
         for plr,espObjects in pairs(esp.players) do
-            if esp.enabled or (plr.Parent ~= game.Players and esp.ai) then
+            if esp.enabled or (plr.Parent ~= game:GetService("Players") and esp.ai) then
                 local character = esp.get_character(plr)
                 local is_alive = esp.is_alive(plr)
                 local health, max_health = esp.get_health(plr)
                 local weapon_equipped = esp.get_tool(plr)
-                local team_check = (plr.Parent == game.Players and esp.team_check and esp.check_team(plr)) or not esp.team_check
+                local team_check = (plr.Parent == game:GetService("Players") and esp.team_check and esp.check_team(plr)) or not esp.team_check
                 if character and is_alive and team_check then
                     local _, onScreen = workspace.CurrentCamera:WorldToViewportPoint(character.PrimaryPart.Position)
                     if onScreen then
@@ -243,7 +243,7 @@ do --// functions
 
                             do --// Name
                                 if esp.settings.name.enabled then
-                                    SetRenderProperty(espObjects.name, "Text", plr.Parent == game.Players and esp.use_display_names and plr.DisplayName or plr.Name)
+                                    SetRenderProperty(espObjects.name, "Text", plr.Parent == game:GetService("Players") and esp.use_display_names and plr.DisplayName or plr.Name)
                                     SetRenderProperty(espObjects.name, "Position", BoxPos + Vector2.new(BoxSize.X/2, -GetRenderProperty(espObjects.name, "TextBounds").Y - 2 - TopOffset))
                                     SetRenderProperty(espObjects.name, "Color", esp.settings.name.color)
 
@@ -262,13 +262,8 @@ do --// functions
                             do --// Health Text
                                 if esp.settings.health_text.enabled then
                                     SetRenderProperty(espObjects.health_text, "Text", tostring(math.floor(health)))
+                                    SetRenderProperty(espObjects.health_text, "Position", Vector2.new((BoxPos.X - GetRenderProperty(espObjects.health_outline, "Thickness") - 1), BoxPos.Y + BoxSize.Y - (health / max_health) * BoxSize.Y) + Vector2.new(-GetRenderProperty(espObjects.name, "TextBounds").Y, 0))
                                     SetRenderProperty(espObjects.health_text, "Color", esp.settings.health_text.color)
-
-                                    if esp.settings.health_bar.enabled and esp.settings.health_bar.side == "left" then
-                                        SetRenderProperty(espObjects.health_text, "Position", Vector2.new((BoxPos.X - GetRenderProperty(espObjects.health_outline, "Thickness") - 1), BoxPos.Y + BoxSize.Y - (health / max_health) * BoxSize.Y) + Vector2.new(-GetRenderProperty(espObjects.name, "TextBounds").Y, 0))
-                                    else
-                                        SetRenderProperty(espObjects.health_text, "Position", Vector2.new((BoxPos.X - 1), BoxPos.Y + BoxSize.Y - (health / max_health) * BoxSize.Y) + Vector2.new(-GetRenderProperty(espObjects.name, "TextBounds").Y, 0))
-                                    end
 
                                     if esp.highlights.target.enabled then
                                         if plr == esp.highlights.target.current then
@@ -345,17 +340,17 @@ do --// functions
 end
 
 do --// object creation
-    for _,v in pairs(game.Players:GetPlayers()) do
-        if v ~= game.Players.LocalPlayer then
+    for _,v in pairs(game:GetService("Players"):GetPlayers()) do
+        if v ~= game:GetService("Players").LocalPlayer then
             esp:new_player(v)
         end
     end
     
-    esp:connection(game.Players.PlayerAdded, function(player)
+    esp:connection(game:GetService("Players").PlayerAdded, function(player)
         esp:new_player(player)
     end)
     
-    esp:connection(game.Players.PlayerRemoving, function(player)
+    esp:connection(game:GetService("Players").PlayerRemoving, function(player)
         for i,v in pairs(esp.players[player]) do
             DestroyRenderObject(v)
         end
@@ -363,7 +358,7 @@ do --// object creation
     end)
 end
 
-esp:connection(game:GetService("RunService").RenderStepped, function()
+esp:connection(game.RunService.RenderStepped, function()
     esp:update()
 end)
 
