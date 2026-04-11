@@ -1,26 +1,26 @@
 local CreateRenderObject, SetRenderProperty, GetRenderProperty, DestroyRenderObject;
 
-if syn then
-    CreateRenderObject, SetRenderProperty, GetRenderProperty, DestroyRenderObject = getupvalue(Drawing.new, 1), getupvalue(getupvalue(Drawing.new, 7).__newindex, 4), getupvalue(getupvalue(Drawing.new, 7).__index, 4), getupvalue(getupvalue(Drawing.new, 7).__index, 3);
-else
-    CreateRenderObject = function(object)
-        return Drawing.new(object)
-    end
+CreateRenderObject = function(object)
+    return Drawing.new(object)
+end
 
-    SetRenderProperty = function(object, property, value)
-        object[property] = value
-    end
+SetRenderProperty = function(object, property, value)
+    object[property] = value
+end
 
-    GetRenderProperty = function(object, property)
-        return object[property]
-    end
+GetRenderProperty = function(object, property)
+    return object[property]
+end
 
-    DestroyRenderObject = function(object)
-        if object then
-            object:Remove()
-        end
+DestroyRenderObject = function(object)
+    if object then
+        object:Remove()
     end
 end
+
+--if syn then
+--    CreateRenderObject, SetRenderProperty, GetRenderProperty, DestroyRenderObject = getupvalue(Drawing.new, 1), getupvalue(getupvalue(Drawing.new, 7).__newindex, 4), getupvalue(getupvalue(Drawing.new, 7).__index, 4), getupvalue(getupvalue(Drawing.new, 7).__index, 3);
+--end
 
 local esp = {
     players = {},
