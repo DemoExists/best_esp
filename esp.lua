@@ -149,11 +149,11 @@ do --// functions
     
     function esp:new_player(plr)
         esp.players[plr] = {
-            name = esp:draw("Text", {Text = "OnlyTwentyCharacters", Font = 2, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
-            tool = esp:draw("Text", {Text = "None", Font = 2, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
-            health_text = esp:draw("Text", {Text = "100", Font = 2, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -98}),
-            distance = esp:draw("Text", {Text = "", Font = 2, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
-            weapon = esp:draw("Text", {Text = "", Font = 2, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
+            name = esp:draw("Text", {Text = "OnlyTwentyCharacters", Font = 3, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
+            tool = esp:draw("Text", {Text = "None", Font = 3, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
+            health_text = esp:draw("Text", {Text = "100", Font = 3, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -98}),
+            distance = esp:draw("Text", {Text = "", Font = 3, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
+            weapon = esp:draw("Text", {Text = "", Font = 3, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
             box_outline = esp:draw("Square", {Color = Color3.fromRGB(0, 0, 0), Thickness = 3, ZIndex = -100}),
             box = esp:draw("Square", {Color = Color3.fromRGB(255, 255, 255), Thickness = 1, ZIndex = -99}),
             health_outline = esp:draw("Line", {Thickness = 3, Color = Color3.fromRGB(0, 0, 0), ZIndex = -100}),
