@@ -50,8 +50,8 @@ local esp = {
     }
 }
 
-do --// functions
-    do --// overrideable
+do
+    do
         function esp.get_character(v)
             if v.Parent == game:GetService("Players") then
                 local character = v.Character
@@ -149,11 +149,11 @@ do --// functions
     
     function esp:new_player(plr)
         esp.players[plr] = {
-            name = esp:draw("Text", {Text = "OnlyTwentyCharacters", Font = 3, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
-            tool = esp:draw("Text", {Text = "None", Font = 3, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
-            health_text = esp:draw("Text", {Text = "100", Font = 3, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -98}),
-            distance = esp:draw("Text", {Text = "", Font = 3, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
-            weapon = esp:draw("Text", {Text = "", Font = 3, Size = 16, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
+            name = esp:draw("Text", {Text = "OnlyTwentyCharacters", Font = 2, Size = 13, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
+            tool = esp:draw("Text", {Text = "None", Font = 2, Size = 13, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
+            health_text = esp:draw("Text", {Text = "100", Font = 2, Size = 13, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -98}),
+            distance = esp:draw("Text", {Text = "", Font = 2, Size = 13, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
+            weapon = esp:draw("Text", {Text = "", Font = 2, Size = 13, Center = true, Outline = true, Color = Color3.fromRGB(255, 255, 255), ZIndex = -100}),
             box_outline = esp:draw("Square", {Color = Color3.fromRGB(0, 0, 0), Thickness = 3, ZIndex = -100}),
             box = esp:draw("Square", {Color = Color3.fromRGB(255, 255, 255), Thickness = 1, ZIndex = -99}),
             health_outline = esp:draw("Line", {Thickness = 3, Color = Color3.fromRGB(0, 0, 0), ZIndex = -100}),
@@ -176,7 +176,7 @@ do --// functions
                         if BoxPos and BoxSize then
                             local BottomOffset = 0
                             local TopOffset = 0
-                            do --// Box
+                            do
                                 if esp.settings.box.enabled then
                                     SetRenderProperty(espObjects.box, "Position", BoxPos)
                                     SetRenderProperty(espObjects.box, "Size", Vector2.new(BoxSize.X, BoxSize.Y))
@@ -199,7 +199,7 @@ do --// functions
                                 end
                             end
     
-                            do --// Health
+                            do
                                 if esp.settings.health_bar.enabled then
                                     if esp.settings.health_bar.side == "left" then
                                         SetRenderProperty(espObjects.health, "From", Vector2.new((BoxPos.X - GetRenderProperty(espObjects.health_outline, "Thickness") - 1), BoxPos.Y + BoxSize.Y))
@@ -241,7 +241,7 @@ do --// functions
                                 end
                             end
 
-                            do --// Name
+                            do
                                 if esp.settings.name.enabled then
                                     SetRenderProperty(espObjects.name, "Text", plr.Parent == game:GetService("Players") and esp.use_display_names and plr.DisplayName or plr.Name)
                                     SetRenderProperty(espObjects.name, "Position", BoxPos + Vector2.new(BoxSize.X/2, -GetRenderProperty(espObjects.name, "TextBounds").Y - 2 - TopOffset))
@@ -259,7 +259,7 @@ do --// functions
                                 end
                             end
     
-                            do --// Health Text
+                            do
                                 if esp.settings.health_text.enabled then
                                     SetRenderProperty(espObjects.health_text, "Text", tostring(math.floor(health)))
                                     SetRenderProperty(espObjects.health_text, "Position", Vector2.new((BoxPos.X - GetRenderProperty(espObjects.health_outline, "Thickness") - 1), BoxPos.Y + BoxSize.Y - (health / max_health) * BoxSize.Y) + Vector2.new(-GetRenderProperty(espObjects.name, "TextBounds").Y, 0))
@@ -277,7 +277,7 @@ do --// functions
                                 end
                             end
 
-                            do --// Distance
+                            do
                                 if esp.settings.distance.enabled then
                                     SetRenderProperty(espObjects.distance, "Text", tostring(math.round((character.PrimaryPart.Position - workspace.CurrentCamera.CFrame.p).Magnitude / 3)) .. " meters")
                                     SetRenderProperty(espObjects.distance, "Position", BoxPos + Vector2.new(BoxSize.X/2, BoxSize.Y + 1))
@@ -297,7 +297,7 @@ do --// functions
                                 end
                             end
     
-                            do --// Weapon
+                            do
                                 if esp.settings.weapon.enabled then
                                     SetRenderProperty(espObjects.weapon, "Text", weapon_equipped)
                                     SetRenderProperty(espObjects.weapon, "Position", BoxPos + Vector2.new(BoxSize.X/2, BoxSize.Y + BottomOffset))
@@ -339,7 +339,7 @@ do --// functions
     end
 end
 
-do --// object creation
+do
     for _,v in pairs(game:GetService("Players"):GetPlayers()) do
         if v ~= game:GetService("Players").LocalPlayer then
             esp:new_player(v)
