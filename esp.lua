@@ -27,10 +27,10 @@ local esp = {
     drawings = {},
     connections = {},
     
-    enabled = false,
+    enabled = true,
     ai = false,
     team_check = false,
-    use_display_names = false,
+    use_display_names = true,
 
     highlights = {
         target = {
@@ -41,12 +41,12 @@ local esp = {
     },
 
     settings = {
-        name = {enabled = false, color = Color3.fromRGB(255, 255, 255)},
-        box = {enabled = false, color = Color3.fromRGB(255, 255, 255)},
-        health_bar = {enabled = false, side = "top"},
-        health_text = {enabled = false, color = Color3.fromRGB(255, 255, 255)},
-        distance = {enabled = false, color = Color3.fromRGB(255, 255, 255)},
-        weapon = {enabled = false, color = Color3.fromRGB(255, 255, 255)}
+        name = {enabled = true, color = Color3.fromRGB(255, 255, 255)},
+        box = {enabled = true, color = Color3.fromRGB(255, 255, 255)},
+        health_bar = {enabled = true, side = "top"},
+        health_text = {enabled = true, color = Color3.fromRGB(255, 255, 255)},
+        distance = {enabled = true, color = Color3.fromRGB(255, 255, 255)},
+        weapon = {enabled = true, color = Color3.fromRGB(255, 255, 255)}
     }
 }
 
