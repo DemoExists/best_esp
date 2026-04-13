@@ -233,6 +233,7 @@ function esp:update()
 
                     if esp.settings.health_text.enabled then
                         objects.health_text.Text = tostring(math_floor(h))
+                        objects.health_text.Color = targetCol or esp.settings.health_text.color
                         objects.health_text.Position = Vec2(boxPos.X - 25, boxPos.Y + boxSize.Y - (hPerc * boxSize.Y))
                         objects.health_text.Visible = true
                     else objects.health_text.Visible = false end
