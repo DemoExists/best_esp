@@ -87,14 +87,7 @@ function esp.check_team(v)
     return lp and v.Team ~= lp.Team
 end
 
-function esp:draw(objType, props)
-    local d = CreateRenderObject(objType)
-    for k, v in pairs(props) do d[k] = v end
-    esp.drawings[d] = d
-    return d
-end
-
-function esp:calculate_bounding_box(char)
+function esp.calculate_bounding_box(char)
     local cCF = Camera.CFrame
     local rootPart = char.HumanoidRootPart
     local rootPos = rootPart.Position
@@ -111,6 +104,33 @@ function esp:calculate_bounding_box(char)
     local boxSize = Vec2(math_ceil(width), math_ceil(height))
 
     return boxPos, boxSize
+end
+
+function esp:draw(objType, props)
+    local d = CreateRenderObject(objType)
+    for k, v in pairs(props) do d[k] = v end
+    esp.drawings[d] = d
+    return d
+end
+
+function esp:unload()
+    self.enabled = false
+
+    for _, v in pairs(self.connections) do
+        if v then v:Disconnect() end
+    end
+    table.clear(self.connections)
+
+    for _, v in pairs(self.drawings) do
+        DestroyRenderObject(v)
+    end
+    table.clear(self.drawings)
+
+    for k in pairs(self) do
+        self[k] = nil
+    end
+
+    getgenv().esp = nil
 end
 
 function esp:new_player(plr)
@@ -151,7 +171,7 @@ function esp:update()
             local _, onScreen = Camera:WorldToViewportPoint(root.Position)
             
             if onScreen then
-                local boxPos, boxSize = esp:calculate_bounding_box(char)
+                local boxPos, boxSize = esp.calculate_bounding_box(char)
                 if boxPos then
                     local isTarget = esp.highlights.target.enabled and plr == esp.highlights.target.current
                     local targetCol = isTarget and esp.highlights.target.color
